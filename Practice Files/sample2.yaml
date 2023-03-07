@@ -1,0 +1,34 @@
+---
+- name: set up webserver
+  hosts: localhost
+  become: true
+  become_method: sudo
+  tasks:
+    - name: LAMP + Wordpress
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        state: latest
+      loop:
+        - apache2
+        - mysql-server
+        - python3
+        - php
+        - php-mysql
+        - libapache2-mod-php
+
+    - name: install pip
+      become: true
+      become_method: sudo
+      apt:
+        update_cache: yes
+        name: python3-pip
+        state: latest
+
+    - name: install selenium
+      become: true
+      become_method: sudo
+      pip: 
+        name: selenium
+        state: latest
+      
