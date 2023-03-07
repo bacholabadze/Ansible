@@ -1,0 +1,23 @@
+- hosts: localhost   # green.example.com
+  connection: local
+  tasks:    # Davalebebi, romlis qvesh vsazghvravt amocanebs, rac sheidzleba xelit dakendes.
+    - name: install lamp stack  # satauri, dagvexmareba gavarchiot ras vushvebt
+      become: yes  # privilegiebi sudoeris
+      apt: name={{ item }} state=present update_cache=yes  # sheidzleba ikos yarn, aptitude. name-it shegvidzlia gadavcet apache da pirdapir apache daakenos, ra mdgomareobashi dakendes, am shemtxvevashi mimdinare versia, da bolos ganaaxlos rogorc apt update
+      with_items:  # camoighos shemdegi packages (daakenos)
+        - apache2
+        - mysql-server
+
+    - name: start services  # taskis saxeli, servicebis chartva
+      service: name={{ item }} state=started enabled=yes  # mimdinare dros service davstartot, enable -it ki gadatvirtvis shemdegac rom chartuli ikos
+      become: yes  # sudoeris ufleba
+      with_items:  # gadavcet shemdegi packages chasartavad
+        - apache2
+        - mysql
+
+    - name: deploy index.html  # taskis saxeli
+      become: yes
+      copy:  # cp brdzaneba an move, gamogvadgeba roca serverze lokalurad gvaqvs failebi, src -s miakitxos, aighos mititebuli faili (* for all) da sheitanos dest - shi
+        src: /tmp/index.html
+        dest: /var/www/html/index.html
+
